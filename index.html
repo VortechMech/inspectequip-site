@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="theme-color" content="#f2c300" />
-  <meta name="description" content="InspectEquip — faster inspections, cleaner reports, better asset history." />
+  <meta name="description" content="InspectEquip — faster inspections, zero paperwork, clean digital reports. Built by field mechanics." />
   <title>InspectEquip — Mobile Inspection App</title>
 
   <style>
@@ -62,16 +62,6 @@
       border:1px solid rgba(0,0,0,.10);
       position:relative;
     }
-    .logo:after{
-      content:"";
-      position:absolute;
-      inset:8px;
-      border-radius:10px;
-      background: linear-gradient(135deg, var(--brand), var(--brand-dark));
-      opacity:.95;
-      clip-path: polygon(35% 10%, 55% 30%, 85% 0, 60% 45%, 72% 62%, 52% 52%, 36% 85%, 30% 65%, 45% 45%);
-      display:none; /* just decorative if you want later */
-    }
 
     .nav-links{
       display:flex; gap:18px; align-items:center;
@@ -82,49 +72,93 @@
     .nav-links a:hover{background:rgba(0,0,0,.04); color:var(--text)}
 
     .nav-cta{display:flex; gap:10px; align-items:center}
+
     /* Buttons (clean, no smudgy glow) */
-.btn{
-  display:inline-flex; align-items:center; justify-content:center;
-  gap:10px;
-  padding:11px 14px;
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding:11px 14px;
+      border-radius:14px;
+      border:1px solid rgba(0,0,0,.12);
+      background:#ffffff;
+      color:var(--text);
+      font-weight:800;
+      font-size:14px;
+      cursor:pointer;
+      user-select:none;
+      white-space:nowrap;
+      box-shadow:none;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      background: rgba(0,0,0,.02);
+      border-color: rgba(0,0,0,.18);
+    }
+    .btn:active{transform: translateY(0px)}
+    .btn.primary{
+      background: var(--brand);
+      color:#111;
+      border:1px solid rgba(0,0,0,.18);
+      box-shadow:none;
+    }
+    .btn.primary:hover{
+      background: var(--brand-dark);
+      border-color: rgba(0,0,0,.22);
+    }
+    .btn:focus-visible{
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(242,195,0,.25);
+    }
+
+/* Store buttons (App Store / Google Play) */
+.store-buttons{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+
+.btn.store{
+  padding:12px 14px;
   border-radius:14px;
-  border:1px solid rgba(0,0,0,.12);
-  background:#ffffff;
-  color:var(--text);
+  font-weight:900;
+  border:1px solid rgba(0,0,0,.14);
+  box-shadow:none;
+}
+
+.btn.store .ico{
+  width:18px; height:18px;
+  display:inline-flex;
+  align-items:center; justify-content:center;
+}
+
+.btn.store .label{
+  display:flex; flex-direction:column;
+  line-height:1.05;
+}
+
+.btn.store .label small{
+  font-size:11px;
   font-weight:800;
+  opacity:.75;
+}
+
+.btn.store .label span{
   font-size:14px;
-  cursor:pointer;
-  user-select:none;
-  white-space:nowrap;
-
-  /* remove glow */
-  box-shadow:none;
-  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  font-weight:900;
 }
 
-.btn:hover{
-  transform: translateY(-1px);
-  background: rgba(0,0,0,.02);
-  border-color: rgba(0,0,0,.18);
+/* iOS: black */
+.btn.store.ios{
+  background:#111;
+  color:#fff;
+  border-color:#111;
 }
+.btn.store.ios:hover{background:#000}
 
-.btn:active{
-  transform: translateY(0px);
-}
-
-.btn.primary{
-  background: var(--brand);
+/* Android: clean light */
+.btn.store.android{
+  background:#fff;
   color:#111;
-  border:1px solid rgba(0,0,0,.18);
-
-  /* remove yellow glow */
-  box-shadow:none;
 }
-
-.btn.primary:hover{
-  background: var(--brand-dark);
-  border-color: rgba(0,0,0,.22);
-}
+.btn.store.android:hover{background:rgba(0,0,0,.02)}
+    
     .hamburger{display:none}
 
     .mobile-menu{display:none; padding:0 0 14px;}
@@ -182,6 +216,13 @@
       font-size:13px;
     }
     .mini strong{color:var(--text)}
+
+    .cred{
+      margin:12px 0 0;
+      font-weight:800;
+      color:var(--text);
+      font-size:14px;
+    }
 
     .card{
       background: var(--panel);
@@ -426,7 +467,6 @@
         </nav>
 
         <div class="nav-cta">
-          
           <a class="btn primary" href="#download">Get the app</a>
           <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
         </div>
@@ -450,19 +490,46 @@
             <div class="kicker"><span class="dot"></span> Faster inspections. Zero paperwork. Clean digital reports.</div>
             <h1>InspectEquip helps you run inspections faster — with photos, checklists, and reports that look professional.</h1>
             <p class="lead">
-              Capture inspections on-site, attach photo evidence, track asset condition over time, and generate consistent reports
-              without the paperwork pain.
+              Capture checks on-site, attach photos to findings, keep asset records organised, and generate consistent documentation without paperwork.
             </p>
+            <p class="cred">Built by field mechanics — designed for workshops, field service teams, and mobile mechanics.</p>
 
-            <div class="hero-actions" id="download">
-              <a class="btn primary" href="#" id="appStoreBtn" aria-label="App Store link"> Download (iOS)</a>
-              <a class="btn" href="#" id="playStoreBtn" aria-label="Google Play link">▶ Download (Android)</a>
-             
-            </div>
+            <div class="store-buttons" id="download">
+  <!-- iOS -->
+  <a class="btn store ios" href="#" id="appStoreBtn" aria-label="Download on the App Store">
+    <span class="ico" aria-hidden="true">
+      <!-- Apple logo (SVG) -->
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+        <path d="M16.365 1.43c0 1.14-.424 2.2-1.218 3.01-.83.85-2.2 1.5-3.37 1.41-.15-1.14.45-2.34 1.26-3.18.89-.92 2.41-1.57 3.33-1.24zM20.9 17.2c-.55 1.26-.82 1.82-1.53 2.92-.99 1.5-2.39 3.37-4.12 3.39-1.54.02-1.93-1-3.99-1-2.06 0-2.49.98-4.03 1.02-1.73.06-3.05-1.68-4.04-3.18C1.5 17.9.06 13.6 1.82 10.57c1.24-2.1 3.2-3.33 5.29-3.33 1.67 0 3.06 1.1 4.03 1.1.94 0 2.7-1.36 4.55-1.16.77.03 2.95.31 4.35 2.34-3.78 2.07-3.17 7.45.86 9.68z"/>
+      </svg>
+    </span>
+    <span class="label">
+      <small>Download on</small>
+      <span>App Store</span>
+    </span>
+  </a>
+
+  <!-- Android -->
+  <a class="btn store android" href="#" id="playStoreBtn" aria-label="Get it on Google Play">
+    <span class="ico" aria-hidden="true">
+      <!-- Google Play logo (SVG triangle) -->
+      <svg viewBox="0 0 24 24" width="18" height="18">
+        <path fill="#34A853" d="M3.5 2.8l10.2 9.2-3.2 3.1L3.5 2.8z"/>
+        <path fill="#4285F4" d="M20.5 12l-3.7-2.1-3.1 3 3.1 3 3.7-1.9z"/>
+        <path fill="#FBBC05" d="M3.5 21.2l7-6.1 3.2 3.1-10.2 3z"/>
+        <path fill="#EA4335" d="M3.5 2.8l7 6.4 3.2-3.1L3.5 2.8z"/>
+      </svg>
+    </span>
+    <span class="label">
+      <small>Get it on</small>
+      <span>Google Play</span>
+    </span>
+  </a>
+</div>
 
             <div class="mini">
-              <div><strong>Works offline</strong> when you’re on-site</div>
-              <div><strong>Photo evidence</strong> + thumbnails</div>
+              <div><strong>Works offline</strong> on-site</div>
+              <div><strong>Photos linked</strong> to findings</div>
               <div><strong>Exportable reports</strong> (PDF-ready)</div>
             </div>
           </div>
@@ -520,123 +587,114 @@
         <div class="section-title">
           <div>
             <h2>Features built for real-world inspections</h2>
-            <p>Everything you need to capture, track, and report — without juggling paper, photos, and spreadsheets.</p>
+            <p>Designed by field mechanics for workshops and mobile technicians — everything you need to capture, track, and document inspections without paperwork.</p>
           </div>
         </div>
 
         <div class="grid3">
-  <div class="feature">
-    <div class="icon">✓</div>
-    <h3>Preloaded & customizable checklists</h3>
-    <p>
-      Start inspections with ready-to-use templates. Record OK, Advisory, and Defect findings with notes and photos to ensure consistent documentation.
-    </p>
-  </div>
+          <div class="feature">
+            <div class="icon">✓</div>
+            <h3>Preloaded & customizable checklists</h3>
+            <p>
+              Start inspections with ready-to-use templates. Record OK, Advisory, and Defect findings with notes and photos to ensure consistent documentation.
+            </p>
+          </div>
 
-  <div class="feature">
-    <div class="icon">📷</div>
-    <h3>Photo documentation</h3>
-    <p>
-      Attach photos directly to inspection items and defects, keeping visual evidence linked to the exact job and asset.
-    </p>
-  </div>
+          <div class="feature">
+            <div class="icon">📷</div>
+            <h3>Photo documentation</h3>
+            <p>
+              Attach photos directly to inspection items and defects, keeping visual evidence linked to the exact job and asset.
+            </p>
+          </div>
 
-  <div class="feature">
-    <div class="icon">📄</div>
-    <h3>Digital inspection reports</h3>
-    <p>
-      Generate clear, structured inspection reports directly from the app — ready to share or archive.
-    </p>
-  </div>
+          <div class="feature">
+            <div class="icon">📄</div>
+            <h3>Digital inspection reports</h3>
+            <p>
+              Generate clear, structured inspection reports directly from the app — ready to share or archive.
+            </p>
+          </div>
 
-  <div class="feature">
-    <div class="icon">⛓</div>
-    <h3>Complete asset records</h3>
-    <p>
-      Maintain a structured record of inspections, findings, and actions for each asset over time.
-    </p>
-  </div>
+          <div class="feature">
+            <div class="icon">⛓</div>
+            <h3>Complete asset records</h3>
+            <p>
+              Maintain a structured record of inspections, findings, and actions for each asset over time.
+            </p>
+          </div>
 
-  <div class="feature">
-    <div class="icon">⚡</div>
-    <h3>Field-ready design</h3>
-    <p>
-      Clear interface, structured workflows, and full offline functionality for reliable on-site inspections.
-    </p>
-  </div>
+          <div class="feature">
+            <div class="icon">⚡</div>
+            <h3>Field-ready design</h3>
+            <p>
+              Clear interface, structured workflows, and full offline functionality for reliable on-site inspections.
+            </p>
+          </div>
 
-  <div class="feature">
-    <div class="icon">🔒</div>
-    <h3>Secure local data</h3>
-    <p>
-      Inspection data is stored securely on-device, giving you control without relying on constant connectivity.
-    </p>
-  </div>
-</div>
+          <div class="feature">
+            <div class="icon">🔒</div>
+            <h3>Secure local data</h3>
+            <p>
+              Inspection data is stored securely on-device, giving you control without relying on constant connectivity.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
-<section id="how">
-  <div class="container">
-    <div class="section-title">
-      <div>
-        <h2>How InspectEquip works</h2>
-        <p>A structured workflow from inspection to professional report.</p>
-      </div>
-    </div>
+    <section id="how">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>How InspectEquip works</h2>
+            <p>A structured workflow from inspection to professional report.</p>
+          </div>
+        </div>
 
-    <div class="steps">
-      <div class="step">
-        <div class="num">1</div>
-        <div>
-          <h3>Select vehicle or equipment</h3>
-          <p>
-            Choose the asset type and begin a new inspection.
-          </p>
+        <div class="steps">
+          <div class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Select vehicle or equipment</h3>
+              <p>Choose the asset type and begin a new inspection.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Enter or load details</h3>
+              <p>Add operator and asset information, or load saved data for faster setup.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Complete the checklist</h3>
+              <p>Record OK, Advisory, and Defect findings with notes and photo documentation.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Review the summary</h3>
+              <p>Confirm results and review flagged items before finalising the inspection.</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">5</div>
+            <div>
+              <h3>Generate the report</h3>
+              <p>Create a structured digital inspection report ready to share or archive.</p>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="step">
-        <div class="num">2</div>
-        <div>
-          <h3>Enter or load details</h3>
-          <p>
-            Add operator and asset information, or load saved data for faster setup.
-          </p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="num">3</div>
-        <div>
-          <h3>Complete the checklist</h3>
-          <p>
-            Record OK, Advisory, and Defect findings with notes and photo documentation.
-          </p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="num">4</div>
-        <div>
-          <h3>Review the summary</h3>
-          <p>
-            Confirm results and review flagged items before finalising the inspection.
-          </p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="num">5</div>
-        <div>
-          <h3>Generate the report</h3>
-          <p>
-            Create a structured digital inspection report ready to share or archive.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
     <section id="screens">
       <div class="container">
@@ -669,19 +727,19 @@
           <div style="display:grid; gap:12px;">
             <details open>
               <summary>Does it work offline?</summary>
-              <p>Yes — you can capture inspections and photos on-site, then sync when you’re back online (implementation depends on your backend setup).</p>
+              <p>Yes — InspectEquip works fully offline and stores inspection data on-device. Online sync/sharing can be added later if needed.</p>
             </details>
             <details>
               <summary>Can we customize checklists?</summary>
-              <p>Yes — you can define templates per equipment type, site, or client requirements (this can be configured in-app or via admin tools).</p>
+              <p>Yes — you can define templates per equipment type or inspection type so your team follows a consistent process.</p>
             </details>
             <details>
               <summary>Can it export PDFs?</summary>
-              <p>Absolutely. The site is written to support “Export report” flows — you can connect it to your PDF generator or reporting service.</p>
+              <p>Yes — generate a structured report from the app and export/share it as a PDF-ready report.</p>
             </details>
             <details>
               <summary>Is there a web dashboard?</summary>
-              <p>Not required, but it’s a common next step. This landing page can link to a portal later when you’re ready.</p>
+              <p>Not required for day-to-day use. A web portal can be added later if you want central management or reporting.</p>
             </details>
           </div>
 
@@ -707,7 +765,7 @@
               </div>
 
               <div class="fineprint">
-                Tip: If you don’t want Formspree, you can replace this with your own API endpoint later.
+                Tip: Replace the Formspree ID in the form action to receive messages, or connect it to your preferred email workflow.
               </div>
             </form>
           </div>
@@ -719,12 +777,11 @@
       <div class="container">
         <div class="card" style="padding:18px; border-radius: var(--radius2); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
           <div>
-            <div style="font-weight:900; font-size:18px;">Ready to modernize inspections?</div>
-            <div style="color:var(--muted); margin-top:4px;">Deploy InspectEquip for your team and clean up reporting in days, not months.</div>
+            <div style="font-weight:900; font-size:18px;">Ready to go paperless?</div>
+            <div style="color:var(--muted); margin-top:4px;">Download InspectEquip and start producing clean digital reports from the field.</div>
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn primary" href="#download">Get the app</a>
-            
+            <a class="btn primary" href="#download">Download now</a>
           </div>
         </div>
       </div>
