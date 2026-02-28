@@ -82,34 +82,49 @@
     .nav-links a:hover{background:rgba(0,0,0,.04); color:var(--text)}
 
     .nav-cta{display:flex; gap:10px; align-items:center}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      gap:10px;
-      padding:11px 14px;
-      border-radius:14px;
-      border:1px solid rgba(0,0,0,.10);
-      background: #ffffff;
-      color:var(--text);
-      font-weight:800;
-      font-size:14px;
-      cursor:pointer;
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-      user-select:none;
-      white-space:nowrap;
-      box-shadow: 0 8px 20px rgba(0,0,0,.05);
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(0,0,0,.02); border-color: rgba(0,0,0,.18)}
-    .btn.primary{
-      background: var(--brand);
-      color:#111;
-      border:1px solid rgba(0,0,0,.08);
-      box-shadow: 0 12px 26px rgba(242,195,0,.25);
-    }
-    .btn.primary:hover{background: var(--brand-dark)}
-    .btn.ghost{
-      background: transparent;
-      box-shadow:none;
-    }
+    /* Buttons (clean, no smudgy glow) */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center;
+  gap:10px;
+  padding:11px 14px;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.12);
+  background:#ffffff;
+  color:var(--text);
+  font-weight:800;
+  font-size:14px;
+  cursor:pointer;
+  user-select:none;
+  white-space:nowrap;
+
+  /* remove glow */
+  box-shadow:none;
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+}
+
+.btn:hover{
+  transform: translateY(-1px);
+  background: rgba(0,0,0,.02);
+  border-color: rgba(0,0,0,.18);
+}
+
+.btn:active{
+  transform: translateY(0px);
+}
+
+.btn.primary{
+  background: var(--brand);
+  color:#111;
+  border:1px solid rgba(0,0,0,.18);
+
+  /* remove yellow glow */
+  box-shadow:none;
+}
+
+.btn.primary:hover{
+  background: var(--brand-dark);
+  border-color: rgba(0,0,0,.22);
+}
     .hamburger{display:none}
 
     .mobile-menu{display:none; padding:0 0 14px;}
@@ -411,7 +426,7 @@
         </nav>
 
         <div class="nav-cta">
-          <a class="btn ghost" href="#contact">Book a demo</a>
+          
           <a class="btn primary" href="#download">Get the app</a>
           <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
         </div>
@@ -432,7 +447,7 @@
       <div class="container">
         <div class="hero-grid">
           <div>
-            <div class="kicker"><span class="dot"></span> Mobile inspections. Instant history. Clean reports.</div>
+            <div class="kicker"><span class="dot"></span> Faster inspections. Zero paperwork. Clean digital reports.</div>
             <h1>InspectEquip helps you run inspections faster — with photos, checklists, and reports that look professional.</h1>
             <p class="lead">
               Capture inspections on-site, attach photo evidence, track asset condition over time, and generate consistent reports
@@ -442,7 +457,7 @@
             <div class="hero-actions" id="download">
               <a class="btn primary" href="#" id="appStoreBtn" aria-label="App Store link"> Download (iOS)</a>
               <a class="btn" href="#" id="playStoreBtn" aria-label="Google Play link">▶ Download (Android)</a>
-              <a class="btn" href="#contact">Request a demo</a>
+             
             </div>
 
             <div class="mini">
@@ -510,81 +525,118 @@
         </div>
 
         <div class="grid3">
-          <div class="feature">
-            <div class="icon">✓</div>
-            <h3>Smart checklists</h3>
-            <p>Consistent inspection steps with pass/fail, notes, and severity — so every job is documented the same way.</p>
-          </div>
-          <div class="feature">
-            <div class="icon">📷</div>
-            <h3>Photo evidence</h3>
-            <p>Attach photos to inspection items and defects. Keep everything tied to the asset and the job record.</p>
-          </div>
-          <div class="feature">
-            <div class="icon">📄</div>
-            <h3>Report-ready outputs</h3>
-            <p>Generate clean summaries you can share with clients. Export options can be wired to your backend later.</p>
-          </div>
-          <div class="feature">
-            <div class="icon">⛓</div>
-            <h3>Asset history</h3>
-            <p>Track condition over time — inspections, issues, and actions — so trends and repeats are easy to spot.</p>
-          </div>
-          <div class="feature">
-            <div class="icon">⚡</div>
-            <h3>Fast on-site workflow</h3>
-            <p>Designed to be used with gloves, in bright light, and with limited signal — minimal taps, maximum clarity.</p>
-          </div>
-          <div class="feature">
-            <div class="icon">🔒</div>
-            <h3>Secure by design</h3>
-            <p>Ready for authentication and role-based access. Your data stays yours (add hosting + policies as needed).</p>
-          </div>
-        </div>
-      </div>
+  <div class="feature">
+    <div class="icon">✓</div>
+    <h3>Preloaded & customizable checklists</h3>
+    <p>
+      Start inspections with ready-to-use templates. Record OK, Advisory, and Defect findings with notes and photos to ensure consistent documentation.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">📷</div>
+    <h3>Photo documentation</h3>
+    <p>
+      Attach photos directly to inspection items and defects, keeping visual evidence linked to the exact job and asset.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">📄</div>
+    <h3>Digital inspection reports</h3>
+    <p>
+      Generate clear, structured inspection reports directly from the app — ready to share or archive.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">⛓</div>
+    <h3>Complete asset records</h3>
+    <p>
+      Maintain a structured record of inspections, findings, and actions for each asset over time.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">⚡</div>
+    <h3>Field-ready design</h3>
+    <p>
+      Clear interface, structured workflows, and full offline functionality for reliable on-site inspections.
+    </p>
+  </div>
+
+  <div class="feature">
+    <div class="icon">🔒</div>
+    <h3>Secure local data</h3>
+    <p>
+      Inspection data is stored securely on-device, giving you control without relying on constant connectivity.
+    </p>
+  </div>
+</div>
     </section>
 
-    <section id="how">
-      <div class="container">
-        <div class="section-title">
-          <div>
-            <h2>How InspectEquip works</h2>
-            <p>A simple flow that teams can adopt quickly.</p>
-          </div>
-        </div>
+<section id="how">
+  <div class="container">
+    <div class="section-title">
+      <div>
+        <h2>How InspectEquip works</h2>
+        <p>A structured workflow from inspection to professional report.</p>
+      </div>
+    </div>
 
-        <div class="steps">
-          <div class="step">
-            <div class="num">1</div>
-            <div>
-              <h3>Select an asset or job</h3>
-              <p>Start an inspection from your asset list or job schedule (integrations can be added later).</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="num">2</div>
-            <div>
-              <h3>Run the checklist</h3>
-              <p>Tick items, add notes, and flag defects with severity and recommended actions.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="num">3</div>
-            <div>
-              <h3>Attach photos</h3>
-              <p>Capture evidence on-site. Photos stay linked to the exact inspection item.</p>
-            </div>
-          </div>
-          <div class="step">
-            <div class="num">4</div>
-            <div>
-              <h3>Generate a report</h3>
-              <p>Share a consistent summary with stakeholders. Save a full history for future reference.</p>
-            </div>
-          </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h3>Select vehicle or equipment</h3>
+          <p>
+            Choose the asset type and begin a new inspection.
+          </p>
         </div>
       </div>
-    </section>
+
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h3>Enter or load details</h3>
+          <p>
+            Add operator and asset information, or load saved data for faster setup.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h3>Complete the checklist</h3>
+          <p>
+            Record OK, Advisory, and Defect findings with notes and photo documentation.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">4</div>
+        <div>
+          <h3>Review the summary</h3>
+          <p>
+            Confirm results and review flagged items before finalising the inspection.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="num">5</div>
+        <div>
+          <h3>Generate the report</h3>
+          <p>
+            Create a structured digital inspection report ready to share or archive.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
     <section id="screens">
       <div class="container">
@@ -636,7 +688,7 @@
           <div class="contact" id="contact">
             <h3 style="margin:0 0 6px; font-size:18px">Contact</h3>
             <p style="margin:0 0 10px; color:var(--muted); font-size:14px; line-height:1.55">
-              Want a demo or pricing? Send a message and we’ll get back to you.
+              Have questions about InspectEquip? Get in touch and we’ll respond shortly.
             </p>
 
             <form id="contactForm" action="https://formspree.io/f/REPLACE_ME" method="POST">
@@ -672,7 +724,7 @@
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn primary" href="#download">Get the app</a>
-            <a class="btn" href="#contact">Book a demo</a>
+            
           </div>
         </div>
       </div>
