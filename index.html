@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="description" content="InspectEquip — faster inspections, cleaner reports, better asset history." />
+  <title>InspectEquip — Mobile Inspection App</title>
+
+  <style>
+    :root{
+      --bg:#070b14;
+      --panel:#0b1220;
+      --panel2:#0f1930;
+      --text:#eaf0ff;
+      --muted:#a8b3cf;
+      --line:rgba(255,255,255,.10);
+      --brand:#6ea8ff;
+      --brand2:#8a5cff;
+      --ok:#43f0b5;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius: 18px;
+      --radius2: 26px;
+      --max: 1120px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 15% 10%, rgba(110,168,255,.22), transparent 60%),
+        radial-gradient(900px 500px at 80% 25%, rgba(138,92,255,.18), transparent 55%),
+        radial-gradient(800px 450px at 55% 95%, rgba(67,240,181,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), #04060c 70%);
+      overflow-x:hidden;
+    }
+
+    /* ✅ Fix 1: gradient banding (subtle noise overlay) */
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      /* tiny SVG noise, very low opacity */
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      z-index:5;
+    }
+
+    a{color:inherit; text-decoration:none}
+    .container{max-width:var(--max); margin:0 auto; padding:0 22px}
+
+    .nav{
+      position:sticky; top:0; z-index:50;
+      background: rgba(7,11,20,.65);
+      backdrop-filter: blur(14px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:14px 0;
+      gap:14px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px;
+    }
+    .logo{
+      width:36px; height:36px; border-radius:12px;
+      background:
+        radial-gradient(12px 12px at 28% 35%, rgba(255,255,255,.9), transparent 55%),
+        linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 10px 30px rgba(110,168,255,.25);
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .nav-links{display:flex; gap:18px; align-items:center; color:var(--muted); font-weight:600; font-size:14px}
+    .nav-links a{padding:8px 10px; border-radius:12px}
+    .nav-links a:hover{background:rgba(255,255,255,.06); color:var(--text)}
+    .nav-cta{display:flex; gap:10px; align-items:center}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      padding:11px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:700;
+      font-size:14px;
+      cursor:pointer;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.09); border-color: rgba(255,255,255,.22)}
+    .btn.primary{
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 18px 40px rgba(110,168,255,.18);
+    }
+    .btn.primary:hover{filter: brightness(1.05)}
+    .btn.ghost{background: transparent}
+    .hamburger{display:none}
+
+    /* ✅ Fix 2: ALWAYS keep mobile menu hidden unless JS opens it */
+    .mobile-menu{display:none; padding:0 0 14px;}
+
+    /* Hero */
+    .hero{padding:70px 0 34px}
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap:28px;
+      align-items:center;
+    }
+    .kicker{
+      display:inline-flex; gap:10px; align-items:center;
+      color:var(--muted);
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:13px;
+      width:fit-content;
+    }
+    .dot{width:8px; height:8px; border-radius:999px; background: var(--ok); box-shadow: 0 0 0 4px rgba(67,240,181,.12)}
+    h1{
+      margin:16px 0 12px;
+      font-size: clamp(34px, 4vw, 54px);
+      line-height:1.02;
+      letter-spacing:-.9px;
+    }
+    .lead{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.5;
+      max-width: 56ch;
+    }
+    .hero-actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:18px}
+    .mini{
+      margin-top:16px;
+      display:flex; gap:16px; flex-wrap:wrap;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .mini strong{color:var(--text)}
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius2);
+      box-shadow: var(--shadow);
+    }
+    .mock{
+      padding:18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .glow{
+      position:absolute; inset:-120px -120px auto auto;
+      width:320px; height:320px;
+      background: radial-gradient(circle at 30% 30%, rgba(110,168,255,.26), transparent 60%);
+      pointer-events:none;
+    }
+    .phone{
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(15,25,48,.75), rgba(11,18,32,.85));
+      padding:16px;
+    }
+    .status{
+      display:flex; justify-content:space-between; align-items:center;
+      font-size:12px; color:rgba(255,255,255,.75);
+      margin-bottom:10px;
+    }
+    .screen{
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(300px 220px at 30% 20%, rgba(138,92,255,.20), transparent 60%),
+        radial-gradient(260px 220px at 75% 75%, rgba(67,240,181,.10), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      padding:14px;
+      min-height: 420px;
+    }
+    .chiprow{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px}
+    .chip{
+      font-size:12px; font-weight:700;
+      color: rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      padding:7px 10px;
+      border-radius:999px;
+    }
+    .list{
+      display:grid; gap:10px; margin-top:12px;
+    }
+    .row{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+    }
+    .row .left{display:flex; flex-direction:column; gap:2px}
+    .row .title{font-weight:800; font-size:13px}
+    .row .sub{color:var(--muted); font-size:12px}
+    .badge{
+      font-size:12px; font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(110,168,255,.16);
+    }
+
+    /* Sections */
+    section{padding:44px 0}
+    .section-title{
+      display:flex; align-items:flex-end; justify-content:space-between; gap:18px;
+      margin-bottom:18px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size: clamp(24px, 2.6vw, 34px);
+      letter-spacing:-.4px;
+    }
+    .section-title p{margin:0; color:var(--muted); max-width: 70ch}
+
+    .grid3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:14px;
+    }
+    .feature{
+      padding:18px;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .icon{
+      width:38px; height:38px; border-radius:14px;
+      display:grid; place-items:center;
+      background: rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      margin-bottom:10px;
+      font-weight:900;
+    }
+    .feature h3{margin:0 0 6px; font-size:16px}
+    .feature p{margin:0; color:var(--muted); line-height:1.55; font-size:14px}
+
+    .steps{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+    }
+    .step{
+      padding:18px;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      display:flex; gap:14px;
+    }
+    .num{
+      width:38px; height:38px; border-radius:14px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, rgba(110,168,255,.24), rgba(138,92,255,.22));
+      border:1px solid rgba(255,255,255,.14);
+      font-weight:900;
+    }
+    .step h3{margin:0 0 6px}
+    .step p{margin:0; color:var(--muted); font-size:14px; line-height:1.55}
+
+    .shots{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:12px;
+    }
+    .shot{
+      aspect-ratio: 9 / 16;
+      border-radius: 22px;
+      border:1px dashed rgba(255,255,255,.18);
+      background: rgba(255,255,255,.03);
+      display:grid; place-items:center;
+      color: var(--muted);
+      font-weight:800;
+      font-size:13px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .faq{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:14px;
+      align-items:start;
+    }
+    details{
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding:14px 16px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:900;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{display:none}
+    details p{color:var(--muted); margin:10px 0 0; line-height:1.55; font-size:14px}
+    .contact{
+      padding:18px;
+      border-radius: var(--radius2);
+    }
+    label{display:block; font-size:13px; font-weight:800; color:rgba(255,255,255,.85); margin:12px 0 6px}
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color:var(--text);
+      outline:none;
+      font-family:var(--font);
+    }
+    textarea{min-height:120px; resize:vertical}
+    input:focus, textarea:focus{border-color: rgba(110,168,255,.45); box-shadow: 0 0 0 4px rgba(110,168,255,.12)}
+    .fineprint{color:var(--muted); font-size:12px; margin-top:10px; line-height:1.45}
+
+    footer{
+      padding:26px 0 44px;
+      border-top: 1px solid var(--line);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .footer-inner{display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; align-items:center}
+    .footer-links{display:flex; gap:14px; flex-wrap:wrap}
+    .pill{
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: rgba(255,255,255,.78);
+      font-weight:800;
+      font-size:12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 980px){
+      .hero-grid{grid-template-columns:1fr; gap:18px}
+      .shots{grid-template-columns: repeat(2, 1fr)}
+      .faq{grid-template-columns:1fr; }
+      .grid3{grid-template-columns:1fr}
+      .steps{grid-template-columns:1fr}
+      .nav-links{display:none}
+      .hamburger{
+        display:inline-flex;
+        width:42px; height:42px;
+        border-radius:14px;
+        border:1px solid rgba(255,255,255,.14);
+        background: rgba(255,255,255,.06);
+        align-items:center; justify-content:center;
+        cursor:pointer;
+      }
+      .mobile-menu a{
+        display:block;
+        padding:10px 12px;
+        border-radius:14px;
+        color:var(--muted);
+        font-weight:800;
+        border:1px solid rgba(255,255,255,.10);
+        background: rgba(255,255,255,.04);
+        margin-top:10px;
+      }
+      .mobile-menu a:hover{color:var(--text)}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <a class="brand" href="#top" aria-label="InspectEquip Home">
+          <span class="logo" aria-hidden="true"></span>
+          <span>InspectEquip</span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary">
+          <a href="#features">Features</a>
+          <a href="#how">How it works</a>
+          <a href="#screens">Screenshots</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <div class="nav-cta">
+          <a class="btn ghost" href="#contact">Book a demo</a>
+          <a class="btn primary" href="#download">Get the app</a>
+          <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">☰</button>
+        </div>
+      </div>
+
+      <!-- ✅ inline style prevents any “flash” line on first load -->
+      <div class="mobile-menu" id="mobileMenu" aria-label="Mobile" style="display:none;">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#screens">Screenshots</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-grid">
+          <div>
+            <div class="kicker"><span class="dot"></span> Mobile inspections. Instant history. Clean reports.</div>
+            <h1>InspectEquip helps you run inspections faster — with photos, checklists, and reports that look professional.</h1>
+            <p class="lead">
+              Capture inspections on-site, attach photo evidence, track asset condition over time, and generate consistent reports
+              without the paperwork pain.
+            </p>
+
+            <div class="hero-actions" id="download">
+              <a class="btn primary" href="#" id="appStoreBtn" aria-label="App Store link"> Download (iOS)</a>
+              <a class="btn" href="#" id="playStoreBtn" aria-label="Google Play link">▶ Download (Android)</a>
+              <a class="btn" href="#contact">Request a demo</a>
+            </div>
+
+            <div class="mini">
+              <div><strong>Works offline</strong> when you’re on-site</div>
+              <div><strong>Photo evidence</strong> + thumbnails</div>
+              <div><strong>Exportable reports</strong> (PDF-ready)</div>
+            </div>
+          </div>
+
+          <div class="card mock" aria-label="App mockup">
+            <div class="glow" aria-hidden="true"></div>
+            <div class="phone">
+              <div class="status">
+                <span>InspectEquip</span>
+                <span>09:41 ▪︎ LTE ▪︎ 🔋</span>
+              </div>
+              <div class="screen">
+                <div class="chiprow">
+                  <span class="chip">Inspection #2481</span>
+                  <span class="chip">Pump Station</span>
+                  <span class="chip">Safety</span>
+                </div>
+
+                <div class="list">
+                  <div class="row">
+                    <div class="left">
+                      <div class="title">Checklist completion</div>
+                      <div class="sub">27 / 30 items</div>
+                    </div>
+                    <span class="badge">90%</span>
+                  </div>
+                  <div class="row">
+                    <div class="left">
+                      <div class="title">Photos attached</div>
+                      <div class="sub">Evidence + defects</div>
+                    </div>
+                    <span class="badge">14</span>
+                  </div>
+                  <div class="row">
+                    <div class="left">
+                      <div class="title">Issues flagged</div>
+                      <div class="sub">Requires follow-up</div>
+                    </div>
+                    <span class="badge">3</span>
+                  </div>
+                </div>
+
+                <div style="margin-top:14px; color:var(--muted); font-size:12px; line-height:1.5">
+                  Tip: Replace this mockup with real screenshots once you have them (section below).
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Features built for real-world inspections</h2>
+            <p>Everything you need to capture, track, and report — without juggling paper, photos, and spreadsheets.</p>
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div class="feature">
+            <div class="icon">✓</div>
+            <h3>Smart checklists</h3>
+            <p>Consistent inspection steps with pass/fail, notes, and severity — so every job is documented the same way.</p>
+          </div>
+          <div class="feature">
+            <div class="icon">📷</div>
+            <h3>Photo evidence</h3>
+            <p>Attach photos to inspection items and defects. Keep everything tied to the asset and the job record.</p>
+          </div>
+          <div class="feature">
+            <div class="icon">📄</div>
+            <h3>Report-ready outputs</h3>
+            <p>Generate clean summaries you can share with clients. Export options can be wired to your backend later.</p>
+          </div>
+          <div class="feature">
+            <div class="icon">⛓</div>
+            <h3>Asset history</h3>
+            <p>Track condition over time — inspections, issues, and actions — so trends and repeats are easy to spot.</p>
+          </div>
+          <div class="feature">
+            <div class="icon">⚡</div>
+            <h3>Fast on-site workflow</h3>
+            <p>Designed to be used with gloves, in bright light, and with limited signal — minimal taps, maximum clarity.</p>
+          </div>
+          <div class="feature">
+            <div class="icon">🔒</div>
+            <h3>Secure by design</h3>
+            <p>Ready for authentication and role-based access. Your data stays yours (add hosting + policies as needed).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>How InspectEquip works</h2>
+            <p>A simple flow that teams can adopt quickly.</p>
+          </div>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Select an asset or job</h3>
+              <p>Start an inspection from your asset list or job schedule (integrations can be added later).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Run the checklist</h3>
+              <p>Tick items, add notes, and flag defects with severity and recommended actions.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Attach photos</h3>
+              <p>Capture evidence on-site. Photos stay linked to the exact inspection item.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Generate a report</h3>
+              <p>Share a consistent summary with stakeholders. Save a full history for future reference.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="screens">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>Screenshots</h2>
+            <p>Replace these placeholders with your real app screenshots (PNG/JPG). The layout is ready.</p>
+          </div>
+        </div>
+
+        <div class="shots">
+          <div class="shot">Screenshot 1<br/>Home / Jobs</div>
+          <div class="shot">Screenshot 2<br/>Checklist</div>
+          <div class="shot">Screenshot 3<br/>Photos</div>
+          <div class="shot">Screenshot 4<br/>Report</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container">
+        <div class="section-title">
+          <div>
+            <h2>FAQ</h2>
+            <p>Common questions from teams evaluating inspection workflows.</p>
+          </div>
+        </div>
+
+        <div class="faq">
+          <div style="display:grid; gap:12px;">
+            <details open>
+              <summary>Does it work offline?</summary>
+              <p>Yes — you can capture inspections and photos on-site, then sync when you’re back online (implementation depends on your backend setup).</p>
+            </details>
+            <details>
+              <summary>Can we customize checklists?</summary>
+              <p>Yes — you can define templates per equipment type, site, or client requirements (this can be configured in-app or via admin tools).</p>
+            </details>
+            <details>
+              <summary>Can it export PDFs?</summary>
+              <p>Absolutely. The site is written to support “Export report” flows — you can connect it to your PDF generator or reporting service.</p>
+            </details>
+            <details>
+              <summary>Is there a web dashboard?</summary>
+              <p>Not required, but it’s a common next step. This landing page can link to a portal later when you’re ready.</p>
+            </details>
+          </div>
+
+          <div class="card contact" id="contact">
+            <h3 style="margin:0 0 6px; font-size:18px">Contact</h3>
+            <p style="margin:0 0 10px; color:var(--muted); font-size:14px; line-height:1.55">
+              Want a demo or pricing? Send a message and we’ll get back to you.
+            </p>
+
+            <form id="contactForm" action="https://formspree.io/f/REPLACE_ME" method="POST">
+              <label for="name">Name</label>
+              <input id="name" name="name" autocomplete="name" placeholder="Your name" required />
+
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required />
+
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us what you need…" required></textarea>
+
+              <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+                <button class="btn primary" type="submit">Send message</button>
+                <span id="formStatus" style="color:var(--muted); font-size:13px;"></span>
+              </div>
+
+              <div class="fineprint">
+                Tip: If you don’t want Formspree, you can replace this with your own API endpoint later.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="padding-top:20px;">
+      <div class="container">
+        <div class="card" style="padding:18px; border-radius: var(--radius2); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+          <div>
+            <div style="font-weight:900; font-size:18px;">Ready to modernize inspections?</div>
+            <div style="color:var(--muted); margin-top:4px;">Deploy InspectEquip for your team and clean up reporting in days, not months.</div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn primary" href="#download">Get the app</a>
+            <a class="btn" href="#contact">Book a demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+          <span class="pill">InspectEquip</span>
+          <span>© <span id="year"></span> All rights reserved.</span>
+        </div>
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+          <a href="#" id="privacyLink">Privacy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const APP_STORE_URL = "https://apple.com"; // TODO replace
+    const PLAY_STORE_URL = "https://play.google.com/store"; // TODO replace
+
+    // Ensure mobile menu is hidden on load (extra safety)
+    const mobileMenu = document.getElementById("mobileMenu");
+    if (mobileMenu) mobileMenu.style.display = "none";
+
+    document.getElementById("appStoreBtn").href = APP_STORE_URL;
+    document.getElementById("playStoreBtn").href = PLAY_STORE_URL;
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    const hamburger = document.getElementById("hamburger");
+    hamburger?.addEventListener("click", () => {
+      const isOpen = mobileMenu.style.display === "block";
+      mobileMenu.style.display = isOpen ? "none" : "block";
+      hamburger.setAttribute("aria-expanded", String(!isOpen));
+    });
+
+    // Smooth scroll for internal anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener("click", (e) => {
+        const href = a.getAttribute("href");
+        if (!href || href === "#") return;
+        const target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        if (mobileMenu) mobileMenu.style.display = "none";
+        hamburger?.setAttribute("aria-expanded", "false");
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    // Contact form status
+    const form = document.getElementById("contactForm");
+    const statusEl = document.getElementById("formStatus");
+    form?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusEl.textContent = "Sending…";
+
+      try {
+        const formData = new FormData(form);
+        const res = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: { "Accept": "application/json" }
+        });
+
+        if (res.ok) {
+          statusEl.textContent = "Sent! We’ll reply soon.";
+          form.reset();
+        } else {
+          statusEl.textContent = "Couldn’t send. Please try again.";
+        }
+      } catch (err) {
+        statusEl.textContent = "Network error. Please try again.";
+      }
+    });
+
+    document.getElementById("privacyLink")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      alert("Add your Privacy Policy page link here.");
+    });
+  </script>
+</body>
+</html>
